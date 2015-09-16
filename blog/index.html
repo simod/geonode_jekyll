@@ -1,43 +1,42 @@
-{% extends "base.html" %}
-
-{% block title %} Blog — {{ block.super }} {% endblock %}
-
-{% block body_class %}geonode-features{% endblock %}
-
-{% block scripts %}
-{{ block.super }}
+---
+layout: base
+title: Blog - GeoNode
+body_class: "geonode-features"
+---    
 
 <style>
 
-    .blogs li{
-        list-style: none;
-        margin-top: 20px;
-        margin-left: 10px;
-    }
-    .blogs h1 {
-        margin-top: 20px;
-    }
+.blogs li{
+  list-style: none;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+.blogs h1 {
+  margin-top: 20px;
+}
 </style>
-{% endblock %}
-
-{% block content %}
 
 <section class="feature-detail">
-   <div class="container">
-     <div class="row">
-      <div class="span12">
-<ul class="blogs">
-    {% for post in posts %}
-    {% ifchanged post.date.year %} <h1>{{post.date.year }}</h1> {% endifchanged %}
-    <li>
-    <h2><a href='{{ ROOT_URL }}/{{ post.path }}'>{{ post.title }}</a></h2>
-    <p>{{ post.date|date:"F j Y" }}</p>
-        {{ post.body|truncatewords_html:30}}
-    </li>
-    {% endfor %}
-</ul>
-</div>
-</div>
+ <div class="container">
+   <div class="row">
+    <div class="span12">
+      <ul class="blogs">
+        {{ assign year = '2009' }}
+        {% for post in site.posts %}
+        {% capture cur_year %}{{ post.date | date: "%Y" }}{% endcapture %}
+        {% if cur_year != year %}
+        {% capture year %}{{ post.date | date: "%Y" }}{% endcapture %}
+        <h1>{{ post.date | date: "%Y" }}</h1>
+        {% endif %}
+        <li>
+          <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+          <p>{{ post.date | date_to_string }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
 </div>
 </section>
-{% endblock content %}
+
+{% include footer.html %}
